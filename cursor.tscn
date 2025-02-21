@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://3vdh745pvbsa"]
+
+[ext_resource type="Script" path="res://cursor.gd" id="1_1tyu5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_504jn"]
+
+[node name="Cursor" type="Area2D"]
+script = ExtResource("1_1tyu5")
+
+[node name="CanvasModulate" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(9, 14.21)
+offset_left = -7.0
+offset_top = -6.0
+offset_right = 7.0
+offset_bottom = 8.21
+color = Color(0.287059, 1, 0.911224, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_504jn")

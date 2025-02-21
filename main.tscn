@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7novhig0f5m"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_hw8u0"]
+[ext_resource type="PackedScene" uid="uid://3vdh745pvbsa" path="res://cursor.tscn" id="2_3tdco"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_hw8u0")
+
+[node name="Main camera" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="Cursor" parent="." instance=ExtResource("2_3tdco")]
+position = Vector2(-286, -161)
