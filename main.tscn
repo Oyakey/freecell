@@ -7,7 +7,7 @@
 script = ExtResource("1_hw8u0")
 
 [node name="Main camera" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+zoom = Vector2(5, 5)
 
 [node name="Cursor" parent="." instance=ExtResource("2_3tdco")]
 position = Vector2(-286, -161)
