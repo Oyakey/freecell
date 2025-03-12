@@ -4,6 +4,7 @@ extends Area2D
 @export var cardValue = 0
 @export var stack: Area2D = null
 @export var order = 0
+var collidingStacks = [];
 var snapping = false;
 var dragged = false;
 const objectType = "CARD";
@@ -24,14 +25,26 @@ func _process(_delta):
 			snapToPos(stack.position);
 	pass
 
-func snapToPos(position: Vector2):
+func snapToPos(pos: Vector2):
 	var tween = get_tree().create_tween()
-	tween.tween_property($".", "position", Vector2(position.x, position.y), .15);
+	tween.tween_property($".", "position", Vector2(pos.x, pos.y), .15);
 
 func _on_area_entered(area: Area2D) -> void:
 	if ("objectType" in area and area.objectType == "STACK"):
-		stack = area;
+		collidingStacks.append(area);
 	
 func _on_area_exited(area: Area2D) -> void:
-	# stack = null;
+	collidingStacks.erase(area);
 	pass;
+
+func getClosestStack() -> Area2D:
+	var closestStack: Area2D = null;
+	for collidingStack in collidingStacks:
+		if (closestStack == null):
+			closestStack = collidingStack;
+			continue;
+		var collidingStackDist = (collidingStack.position - position)
+		var closestDist = (closestStack.position - position)
+		if (collidingStackDist.length() <= closestDist.length()):
+			closestStack = collidingStack;
+	return closestStack;

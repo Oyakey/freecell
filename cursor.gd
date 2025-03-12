@@ -18,6 +18,9 @@ func _process(_delta: float) -> void:
 		else:
 			# dragging.z_index = dragging.order;
 			dragging.dragged = true;
+			var newStack = dragging.getClosestStack();
+			if (newStack != null):
+				dragging.stack = newStack
 			dragging = null
 	else:
 		if colliding != null and Input.is_action_pressed("leftMouse"):
