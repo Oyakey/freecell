@@ -3,7 +3,7 @@ extends Area2D
 @onready var _animated_sprite = $AnimatedSprite2D
 @export var cardValue = 0
 @export var stack: Area2D = null
-@export var order = 0
+@export var order := 0
 var collidingStacks = [];
 var snapping = false;
 var dragged = false;
@@ -22,7 +22,7 @@ func _process(_delta):
 	if (dragged):
 		dragged = false;
 		if (stack != null):
-			snapToPos(stack.position);
+			snapToPos(stack.position + Vector2(0, order * 17.));
 	pass
 
 func snapToPos(pos: Vector2):
@@ -48,3 +48,14 @@ func getClosestStack() -> Area2D:
 		if (collidingStackDist.length() <= closestDist.length()):
 			closestStack = collidingStack;
 	return closestStack;
+
+func addToStack() -> void:
+	# dragging.z_index = dragging.order;
+	dragged = true;
+	var newStack = getClosestStack();
+	if (newStack != null):
+		if (stack != null):
+			stack.cardsOnStack.erase($".")
+		stack = newStack
+		order = newStack.cardsOnStack.size()
+		newStack.cardsOnStack.append($".")

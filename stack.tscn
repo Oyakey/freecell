@@ -22,6 +22,6 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.49, 1, 0.524, 0.164706)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
+[node name="Collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_nn82n")
+debug_color = Color(0.96475, 0, 0.490875, 0.42)
