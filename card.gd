@@ -21,16 +21,31 @@ func _ready() -> void:
 func _process(_delta):
 	if (dragged):
 		dragged = false;
-		if (stack != null):
-			snapToPos(stack.position);
+		snapToStack();
 	pass
 
 func snapToPos(pos: Vector2):
 	var tween = get_tree().create_tween()
 	tween.tween_property($".", "position", Vector2(pos.x, pos.y), .15);
 
+func snapToStack():
+	if (stack == null):
+		return;
+	snapToPos(stack.position);
+
+func teleportToStack():
+	if (stack == null):
+		return;
+	position = stack.position;
+
 func _on_area_entered(area: Area2D) -> void:
-	if ("objectType" in area and area.objectType == "STACK"):
+	if (
+		"objectType" in area and (
+			area.objectType == "STACK" or 
+			area.objectType == "FREECELL" or 
+			area.objectType == "FOUNDATION"
+		)
+	):
 		collidingStacks.append(area);
 	
 func _on_area_exited(area: Area2D) -> void:
