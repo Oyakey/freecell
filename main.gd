@@ -13,27 +13,20 @@ var cardScene = preload("res://card.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var cards = [];
-	for i in range(13*4):
-		cards.append(i)
-	cards.shuffle();
-	var index = 0;
-	for stack in stacks:
-		var cardsForStack = cards.slice(0,7);
-		for i in range(cardsForStack.size()):
-			var card = spawnCard(cardsForStack[i],stack,i);
-			stack.cardsOnStack.append(card);
-		index+=1;
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
+	var cardValues := range(13*4);
+	cardValues.shuffle();
+	for stack in range(stacks.size()):
+		var cardsOnStackCount = 7 if stack < 4 else 6;
+		for i in range(cardsOnStackCount):
+			spawnCard(cardValues[0], stacks[stack], i)
+			cardValues.pop_at(0);
 
 func spawnCard(cardValue: int, stack: Area2D, order: int):
 	var card := cardScene.instantiate();
 	card.cardValue = cardValue;
 	card.stack = stack;
-	card.order = order;
+	# card.order = order;
+	card.order = stack.cardsOnStack.size()
+	stack.cardsOnStack.append(card)
+	card.teleportToStack();
 	add_child(card);
-	return card;

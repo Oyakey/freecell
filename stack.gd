@@ -5,6 +5,9 @@ var cardsOnStack := [];
 @onready var collider : CollisionShape2D = $"./Collider";
 var cardsOnStackLastCount := 0;
 
+func canAppendCard():
+	# TODO: add rules for adding card to a stack (value -1 and opposite color).
+	return true;
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

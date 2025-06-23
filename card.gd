@@ -8,6 +8,8 @@ var collidingStacks = [];
 var snapping = false;
 var dragged = false;
 const objectType = "CARD";
+const cardOffset = Vector2(0, 17.);
+const cardOffsetY = 17.;
 
 func getCardColor() -> int:
 	return cardValue % 13
@@ -21,16 +23,31 @@ func _ready() -> void:
 func _process(_delta):
 	if (dragged):
 		dragged = false;
-		if (stack != null):
-			snapToPos(stack.position + Vector2(0, order * 17.));
+		snapToStack();
 	pass
 
 func snapToPos(pos: Vector2):
 	var tween = get_tree().create_tween()
 	tween.tween_property($".", "position", Vector2(pos.x, pos.y), .15);
 
+func snapToStack():
+	if (stack == null):
+		return;
+	snapToPos(stack.position + cardOffset * order);
+
+func teleportToStack():
+	if (stack == null):
+		return;
+	position = stack.position + Vector2(0, order * cardOffsetY);
+
 func _on_area_entered(area: Area2D) -> void:
-	if ("objectType" in area and area.objectType == "STACK"):
+	if (
+		"objectType" in area and (
+			area.objectType == "STACK" or 
+			area.objectType == "FREECELL" or 
+			area.objectType == "FOUNDATION"
+		)
+	):
 		collidingStacks.append(area);
 	
 func _on_area_exited(area: Area2D) -> void:
