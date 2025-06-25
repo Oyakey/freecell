@@ -1,18 +1,27 @@
 extends Area2D
 
-@onready var _animated_sprite = $AnimatedSprite2D
-@export var cardValue = 0
+class_name Card
+
+@onready var _animated_sprite := $AnimatedSprite2D
+@export var cardValue := 0
 @export var stack: Area2D = null
 @export var order := 0
-var collidingStacks = [];
-var snapping = false;
-var dragged = false;
-const objectType = "CARD";
-const cardOffset = Vector2(0, 17.);
-const cardOffsetY = 17.;
+var collidingStacks := [];
+var snapping := false;
+var dragged := false;
+const objectType := "CARD";
 
-func getCardColor() -> int:
-	return cardValue % 13
+static var cardCountByColor := 13
+
+static func getCardNumber(value: int) -> int:
+	return value % cardCountByColor
+	
+static func getCardColor(value: int) -> int:
+	return floor(value / float(cardCountByColor))
+
+static func isCardRed(value: int) -> bool:
+	# Red colors are 0, 1; Black colors are 2, 3.
+	return getCardColor(value) == 0 or getCardColor(value) == 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,12 +42,12 @@ func snapToPos(pos: Vector2):
 func snapToStack():
 	if (stack == null):
 		return;
-	snapToPos(stack.position + cardOffset * order);
+	snapToPos(stack.position + stack.cardOffset * order);
 
 func teleportToStack():
 	if (stack == null):
 		return;
-	position = stack.position + Vector2(0, order * cardOffsetY);
+	position = stack.position + stack.cardOffset * order;
 
 func _on_area_entered(area: Area2D) -> void:
 	if (
@@ -67,12 +76,21 @@ func getClosestStack() -> Area2D:
 	return closestStack;
 
 func addToStack() -> void:
-	# dragging.z_index = dragging.order;
 	dragged = true;
 	var newStack = getClosestStack();
-	if (newStack != null):
-		if (stack != null):
-			stack.cardsOnStack.erase($".")
-		stack = newStack
-		order = newStack.cardsOnStack.size()
-		newStack.cardsOnStack.append($".")
+#
+	# Check if card can be added to stack.
+	if (newStack == null): return;
+	if (!newStack.canAppendCard(cardValue)): return;
+#
+	# Proceed to add card to stack.
+	if (stack != null):
+		stack.cardsOnStack.erase($".")
+	stack = newStack
+	order = newStack.cardsOnStack.size()
+	newStack.cardsOnStack.append($".")
+
+func canMoveCard():
+	if (stack.objectType == "STACK" and stack.cardsOnStack.size() > order + 1):
+		return false;	
+	return true;

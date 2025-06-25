@@ -1,8 +1,9 @@
 extends Area2D
 
+# Mandatory properties.
 const objectType = "FREECELL";
+const cardOffset := Vector2(0, 0);
+var cardsOnStack := [];
 
-var card: Area2D = null;
-
-func canAppendCard():
-	return card == null;
+func canAppendCard(_cardValue: int):
+	return cardsOnStack.size() <= 0;

@@ -20,10 +20,11 @@ func _process(_delta: float) -> void:
 			dragging = null
 	else:
 		if colliding != null and Input.is_action_pressed("leftMouse"):
-			dragging = colliding
-			zindex += 1;
-			dragging.z_index = zindex;
-			offset = dragging.position - position
+			if (colliding.canMoveCard()):
+				dragging = colliding
+				zindex += 1;
+				dragging.z_index = zindex;
+				offset = dragging.position - position
 
 func _on_area_entered(area: Area2D) -> void:
 	if ("objectType" in area and area.objectType == "CARD"):

@@ -1,19 +1,26 @@
 extends Area2D
 
+# TODO: Could be refactored to a class / interface.
+# Mandatory properties.
 const objectType = "STACK";
+const cardOffset := Vector2(0, 17.);
 var cardsOnStack := [];
+
+# Local properties.
 @onready var collider : CollisionShape2D = $"./Collider";
 var cardsOnStackLastCount := 0;
 
-func canAppendCard():
-	# TODO: add rules for adding card to a stack (value -1 and opposite color).
+func canAppendCard(cardValue: int):
+	var cardOnTop = cardsOnStack.back()
+	# If the stack is empty, we can append any card.
+	if (cardOnTop == null): return true;
+	# The card should not be of the same color.
+	if (Card.isCardRed(cardValue) == Card.isCardRed(cardOnTop.cardValue)): return false;
+	# The card value should be directly below the card on top.
+	if (Card.getCardNumber(cardValue) != Card.getCardNumber(cardOnTop.cardValue) - 1): return false;
 	return true;
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if (cardsOnStack.size() != cardsOnStackLastCount):
 		cardsOnStackLastCount = cardsOnStack.size();
 		var shape = RectangleShape2D.new();
