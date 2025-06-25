@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://b7novhig0f5m"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_hw8u0"]
+[ext_resource type="Script" uid="uid://hkatp0optn1f" path="res://main.gd" id="1_hw8u0"]
 [ext_resource type="PackedScene" uid="uid://3vdh745pvbsa" path="res://cursor.tscn" id="2_3tdco"]
 [ext_resource type="PackedScene" uid="uid://bccd8l4qav5fc" path="res://stack.tscn" id="3_yjldg"]
-[ext_resource type="PackedScene" path="res://freecell.tscn" id="4_7t7vt"]
+[ext_resource type="PackedScene" uid="uid://c1a0bc7cp1wd2" path="res://freecell.tscn" id="4_7t7vt"]
 [ext_resource type="PackedScene" uid="uid://dm3xcrqkg8bqx" path="res://foundation.tscn" id="5_dumri"]
 
 [node name="Game" type="Node2D"]

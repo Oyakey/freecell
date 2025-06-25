@@ -1,7 +1,7 @@
 [gd_scene load_steps=57 format=3 uid="uid://bvtm5lvfa8qsl"]
 
 [ext_resource type="Texture2D" uid="uid://bik42orlcetlw" path="res://1.2 Poker cards.png" id="1_7qk12"]
-[ext_resource type="Script" path="res://card.gd" id="1_nyyya"]
+[ext_resource type="Script" uid="uid://sjejfoj46ir7" path="res://card.gd" id="1_nyyya"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3lxbl"]
 atlas = ExtResource("1_7qk12")
