@@ -8,7 +8,7 @@ var cardsOnStack := [];
 # Local properties.
 @export var color: int = 0;
 
-func canAppendCard(cardValue: int):
+func CanAppendCard(cardValue: int):
 	if (Card.getCardColor(cardValue) != color): return false;
 	if (Card.getCardNumber(cardValue) > cardsOnStack.size()): return false;
 	return true;

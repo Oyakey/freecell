@@ -10,7 +10,7 @@ var cardsOnStack := [];
 @onready var collider : CollisionShape2D = $"./Collider";
 var cardsOnStackLastCount := 0;
 
-func canAppendCard(cardValue: int):
+func CanAppendCard(cardValue: int):
 	var cardOnTop = cardsOnStack.back()
 	# If the stack is empty, we can append any card.
 	if (cardOnTop == null): return true;

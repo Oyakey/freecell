@@ -55,7 +55,8 @@ func _on_area_entered(area: Area2D) -> void:
 			area.objectType == "STACK" or 
 			area.objectType == "FREECELL" or 
 			area.objectType == "FOUNDATION"
-		)
+		) or 
+		"ObjectType" in area and area.ObjectType == "FOUNDATION"
 	):
 		collidingStacks.append(area);
 	
@@ -81,16 +82,16 @@ func addToStack() -> void:
 #
 	# Check if card can be added to stack.
 	if (newStack == null): return;
-	if (!newStack.canAppendCard(cardValue)): return;
+	if (!newStack.CanAppendCard(cardValue)): return;
 #
 	# Proceed to add card to stack.
 	if (stack != null):
-		stack.cardsOnStack.erase($".")
-	stack = newStack
-	order = newStack.cardsOnStack.size()
-	newStack.cardsOnStack.append($".")
+		stack.cardsOnStack.erase($".");
+	stack = newStack;
+	order = newStack.cardsOnStack.size();
+	newStack.cardsOnStack.append($".");
 
 func canMoveCard():
 	if (stack.objectType == "STACK" and stack.cardsOnStack.size() > order + 1):
-		return false;	
+		return false;
 	return true;
