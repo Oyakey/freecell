@@ -85,12 +85,12 @@ func addToStack() -> void:
 #
 	# Proceed to add card to stack.
 	if (stack != null):
-		stack.cardsOnStack.erase($".")
-	stack = newStack
-	order = newStack.cardsOnStack.size()
-	newStack.cardsOnStack.append($".")
+		stack.cardsOnStack.erase($".");
+	stack = newStack;
+	order = newStack.cardsOnStack.size();
+	newStack.cardsOnStack.append($".");
 
 func canMoveCard():
 	if (stack.objectType == "STACK" and stack.cardsOnStack.size() > order + 1):
-		return false;	
+		return false;
 	return true;
