@@ -1,12 +1,22 @@
 using Godot;
-using System;
+using System.Collections.Generic;
 
 public partial class Foundation : Area2D, Pile
 {
     // Mandatory properties.
-    public string objectType = "FOUNDATION";
-    public Vector2 cardOffset = new(0, 0);
-    public Card[] cardsOnStack = [];
+    List<Card> cardsOnStack = new();
+    public List<Card> CardsOnStack
+    {
+        get { return cardsOnStack; }
+    }
+    public string ObjectType
+    {
+        get { return "FOUNDATION"; }
+    }
+    public Vector2 CardOffset
+    {
+        get { return new(0, 0); }
+    }
 
     // Local properties.
     public int color = 0;
@@ -14,7 +24,7 @@ public partial class Foundation : Area2D, Pile
     public bool canAppendCard(int cardValue)
     {
         if (Card.getCardColor(cardValue) != color) return false;
-        if (Card.getCardNumber(cardValue) > cardsOnStack.size()) return false;
+        if (Card.getCardNumber(cardValue) > cardsOnStack.Count) return false;
         return true;
     }
 }

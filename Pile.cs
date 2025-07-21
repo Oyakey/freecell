@@ -1,14 +1,13 @@
 using Godot;
-using System;
+using System.Collections.Generic;
 
-// public partial class Foundation : Node
 public interface Pile
 {
-    public int CardsOnStack { get; }
-    public void AddCard(int cardValue);
-    public void RemoveCard(int cardValue);
-    public string ObjectType;
-    public Vector2 CardOffset;
+    public List<Card> CardsOnStack { get; }
+    public string ObjectType { get; }
+    public Vector2 CardOffset { get; }
+    // public void AddCard(int cardValue);
+    // public void RemoveCard(int cardValue);
 }
 
 enum ObjectType
