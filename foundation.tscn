@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://dm3xcrqkg8bqx"]
 
-[ext_resource type="Script" uid="uid://dsoep2ofjo8d" path="res://foundation.gd" id="1_ri8bf"]
+[ext_resource type="Script" uid="uid://0he3omhw3xj1" path="res://Foundation.cs" id="1_2m1qn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ahx50"]
 size = Vector2(48, 64)
 
 [node name="Foundation" type="Area2D"]
-script = ExtResource("1_ri8bf")
+script = ExtResource("1_2m1qn")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 8

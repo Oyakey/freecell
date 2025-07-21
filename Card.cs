@@ -1,24 +1,26 @@
 using Godot;
 using System;
 
-public class Card : Node2D
+namespace freecell;
+
+public partial class Card : Node2D
 {
-    public static int cardCountByColor = 13;
+  public const int CardCountByColor = 13;
 
-    public static int getCardNumber(int value)
-    {
-        return value % cardCountByColor;
-    }
+  public static int GetCardNumber(int value)
+  {
+    return value % CardCountByColor;
+  }
 
-    public static int getCardColor(int value)
-    {
-        return Mathf.FloorToInt(value / cardCountByColor);
-    }
+  public static int GetCardColor(int value)
+  {
+    return Mathf.FloorToInt(value / CardCountByColor);
+  }
 
-    public static bool isCardRed(int value)
-    {
-        // Red colors are 0, 1; Black colors are 2, 3.
-        return getCardColor(value) == 0 || getCardColor(value) == 1;
-    }
+  public static bool IsCardRed(int value)
+  {
+    // Red colors are 0, 1; Black colors are 2, 3.
+    return GetCardColor(value) == 0 || GetCardColor(value) == 1;
+  }
 
 }

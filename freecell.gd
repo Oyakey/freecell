@@ -5,5 +5,5 @@ const objectType = "FREECELL";
 const cardOffset := Vector2(0, 0);
 var cardsOnStack := [];
 
-func canAppendCard(_cardValue: int):
+func CanAppendCard(_cardValue: int):
 	return cardsOnStack.size() <= 0;
