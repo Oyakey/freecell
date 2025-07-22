@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Freecell;
 
-public partial class Cascade : Area2D, IStack
+public partial class Cascade : Stack
 {
     // Mandatory properties.
-    public List<Card> CardsOnStack { get; set; } = [];
-    public string ObjectType { get; } = "STACK";
-    public Vector2 CardOffset { get; } = new(0, 17);
+    public override List<Card> CardsOnStack { get; set; } = [];
+    public override string ObjectType { get; } = "STACK";
+    public override Vector2 CardOffset { get; } = new(0, 17);
 
-    public bool CanAppendCard(int cardValue)
+    public override bool CanAppendCard(int cardValue)
     {
         var cardOnTop = CardsOnStack.Last();
         // If the stack is empty, we can append any card.

@@ -11,11 +11,11 @@ public partial class Card : Area2D
 
     public string ObjectType = "CARD";
     public int CardValue = 0;
+    public Stack Stack = null;
+    public int Order = 0;
 
     private AnimatedSprite2D _animated_sprite;
-    private Area2D stack = null;
-    private int order = 0;
-    private List<Area2D> collidingStacks = [];
+    private List<Stack> collidingStacks = [];
     private bool snapping = false;
     private bool dragged = false;
 
@@ -38,12 +38,12 @@ public partial class Card : Area2D
         return color == 0 || color == 1;
     }
 
-    // Private methods.
+    // Godot methods.
     private void _ready()
     {
         _animated_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animated_sprite.SetFrameAndProgress(CardValue, 0);
-        ZIndex = order;
+        ZIndex = Order;
     }
 
     private void _process()
@@ -51,44 +51,44 @@ public partial class Card : Area2D
         if (dragged)
         {
             dragged = false;
-            snapToStack();
+            SnapToStack();
         }
     }
 
-    private void snapToPos(Vector2 pos)
+    // Private methods.
+    private void SnapToPos(Vector2 pos)
     {
         var tween = GetTree().CreateTween();
         tween.TweenProperty(GetNode("."), "position", new Vector2(pos.X, pos.Y), .15);
     }
 
-    private void snapToStack()
+    private void SnapToStack()
     {
-        if (stack == null) return;
-        // snapToPos(stack.Position + stack.CardOffset * order);
+        if (Stack == null) return;
+        SnapToPos(Stack.Position + Stack.CardOffset * Order);
     }
 
-    private void teleportToStack()
+    public void TeleportToStack()
     {
-        if (stack == null) return;
-        // Position = stack.Position + stack.CardOffset * order;
+        if (Stack == null) return;
+        Position = Stack.Position + Stack.CardOffset * Order;
     }
 
-    private void _on_area_entered(Area2D area)
+    private void _on_area_entered(Stack area)
     {
-        if (area is Stack) collidingStacks.Add(area);
+        collidingStacks.Add(area);
     }
 
-    private void _on_area_exited(Area2D area)
+    private void _on_area_exited(Stack area)
     {
         collidingStacks.Remove(area);
     }
 
-    private Area2D getClosestStack()
+    private Stack GetClosestStack()
     {
-        Area2D closestStack = null;
-        foreach (Area2D collidingStack in collidingStacks)
+        Stack closestStack = null;
+        foreach (var collidingStack in collidingStacks)
         {
-
             if (closestStack == null)
             {
                 closestStack = collidingStack;
@@ -104,26 +104,26 @@ public partial class Card : Area2D
         return closestStack;
     }
 
-    private void addToStack()
+    private void AddToStack()
     {
         dragged = true;
-        var newStack = getClosestStack();
+        var newStack = GetClosestStack();
 
         // Check if card can be added to stack.
         if (newStack == null) return;
-        // if (!newStack.CanAppendCard(CardValue)) return;
-        if (stack == null) return;
+        if (!newStack.CanAppendCard(CardValue)) return;
+        if (Stack == null) return;
 
         // Proceed to add card to stack.
-        // stack.CardsOnStack.Remove(GetNode<Card>("."));
-        stack = newStack;
-        // order = newStack.CardsOnStack.Count;
-        // newStack.CardsOnStack.Add(GetNode<Card>("."));
+        Stack.CardsOnStack.Remove(GetNode<Card>("."));
+        Stack = newStack;
+        // Order = newStack.CardsOnStack.Count;
+        newStack.CardsOnStack.Add(GetNode<Card>("."));
     }
 
-    private bool canMoveCard()
+    private bool CanMoveCard()
     {
-        // if (stack.ObjectType == "STACK" && stack.CardsOnStack.Count > order + 1) return false;
+        if (Stack is Cascade && Stack.CardsOnStack.Count > Order + 1) return false;
         return true;
     }
 }

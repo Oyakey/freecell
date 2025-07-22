@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Freecell;
 
-public partial class Freecell : Area2D, IStack
+public partial class Freecell : Stack
 {
     // Mandatory properties.
-    public List<Card> CardsOnStack { get; set; } = [];
-    public string ObjectType { get; } = "FREECELL";
-    public Vector2 CardOffset { get; } = new(0, 0);
+    public override List<Card> CardsOnStack { get; set; } = [];
+    public override string ObjectType { get; } = "FREECELL";
+    public override Vector2 CardOffset { get; } = new(0, 0);
 
-    public bool CanAppendCard(int cardValue)
+    public override bool CanAppendCard(int cardValue)
     {
         return CardsOnStack.Count <= 0;
     }
