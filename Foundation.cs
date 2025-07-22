@@ -1,33 +1,23 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
-namespace freecell;
+namespace Freecell;
 
-public partial class Foundation : Area2D, IPile
+public partial class Foundation : Area2D, IStack
 {
   // Mandatory properties.
-  List<Card> cardsOnStack = new();
-  public List<Card> CardsOnStack
+  public List<Card> CardsOnStack { get; set; } = [];
+  public string ObjectType { get; } = "FOUNDATION";
+  public Vector2 CardOffset { get; } = new(0, 0);
+
+  public bool CanAppendCard(int cardValue)
   {
-	get { return cardsOnStack; }
-  }
-  public string ObjectType
-  {
-	get { return "FOUNDATION"; }
-  }
-  public Vector2 CardOffset
-  {
-	get { return new(0, 0); }
+    if (Card.GetCardColor(cardValue) != color) return false;
+    if (Card.GetCardNumber(cardValue) > CardsOnStack.Count) return false;
+    return true;
   }
 
   // Local properties.
   public int color = 0;
 
-  public bool CanAppendCard(int cardValue)
-  {
-	if (Card.GetCardColor(cardValue) != color) return false;
-	if (Card.GetCardNumber(cardValue) > cardsOnStack.Count) return false;
-	return true;
-  }
 }

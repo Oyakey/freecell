@@ -56,15 +56,12 @@ position = Vector2(54, -117)
 
 [node name="Foundation Clubs" parent="." instance=ExtResource("5_dumri")]
 position = Vector2(106, -117)
-color = 3
 
 [node name="Foundation Diamonds" parent="." instance=ExtResource("5_dumri")]
 position = Vector2(158, -117)
-color = 1
 
 [node name="Foundation Spades" parent="." instance=ExtResource("5_dumri")]
 position = Vector2(210, -117)
-color = 2
 
 [node name="Background" type="ColorRect" parent="."]
 show_behind_parent = true
