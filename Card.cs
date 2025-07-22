@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Freecell;
 using Godot;
 
@@ -8,6 +8,11 @@ public partial class Card : Area2D
 {
     public const int CardCountByColor = 13;
     public const int CARD_COUNT_BY_COLOR = 13;
+    public List<Stack> CollidingStacks
+    {
+        get => collidingStacks;
+        set { collidingStacks = value; }
+    }
 
     public string ObjectType = "CARD";
     public int CardValue = 0;
@@ -55,6 +60,34 @@ public partial class Card : Area2D
         }
     }
 
+    // Public methods.
+    public void AddToStack()
+    {
+        dragged = true;
+        var newStack = GetClosestStack();
+
+        // Check if card can be added to stack.
+        if (newStack == null)
+            return;
+        if (!newStack.CanAppendCard(CardValue))
+            return;
+        if (Stack == null)
+            return;
+
+        // Proceed to add card to stack.
+        Stack.CardsOnStack.Remove(GetNode<Card>("."));
+        Stack = newStack;
+        // Order = newStack.CardsOnStack.Count;
+        newStack.CardsOnStack.Add(GetNode<Card>("."));
+    }
+
+    public bool CanMoveCard()
+    {
+        if (Stack is Cascade && Stack.CardsOnStack.Count > Order + 1)
+            return false;
+        return true;
+    }
+
     // Private methods.
     private void SnapToPos(Vector2 pos)
     {
@@ -64,13 +97,15 @@ public partial class Card : Area2D
 
     private void SnapToStack()
     {
-        if (Stack == null) return;
+        if (Stack == null)
+            return;
         SnapToPos(Stack.Position + Stack.CardOffset * Order);
     }
 
     public void TeleportToStack()
     {
-        if (Stack == null) return;
+        if (Stack == null)
+            return;
         Position = Stack.Position + Stack.CardOffset * Order;
     }
 
@@ -96,34 +131,11 @@ public partial class Card : Area2D
             }
             var collidingStackDist = collidingStack.Position - Position;
 
-
             var closestDist = closestStack.Position - Position;
 
-            if (collidingStackDist.Length() <= closestDist.Length()) closestStack = collidingStack;
+            if (collidingStackDist.Length() <= closestDist.Length())
+                closestStack = collidingStack;
         }
         return closestStack;
-    }
-
-    private void AddToStack()
-    {
-        dragged = true;
-        var newStack = GetClosestStack();
-
-        // Check if card can be added to stack.
-        if (newStack == null) return;
-        if (!newStack.CanAppendCard(CardValue)) return;
-        if (Stack == null) return;
-
-        // Proceed to add card to stack.
-        Stack.CardsOnStack.Remove(GetNode<Card>("."));
-        Stack = newStack;
-        // Order = newStack.CardsOnStack.Count;
-        newStack.CardsOnStack.Add(GetNode<Card>("."));
-    }
-
-    private bool CanMoveCard()
-    {
-        if (Stack is Cascade && Stack.CardsOnStack.Count > Order + 1) return false;
-        return true;
     }
 }

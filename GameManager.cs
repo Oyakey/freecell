@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
 namespace Freecell;
@@ -13,15 +12,16 @@ public partial class GameManager : Node2D
     // Called when the node enters the scene tree for the first time.
     private void _ready()
     {
-        cascades = [
-            GetNode<Cascade>("Stack"),
-            GetNode<Cascade>("Stack2"),
-            GetNode<Cascade>("Stack3"),
-            GetNode<Cascade>("Stack4"),
-            GetNode<Cascade>("Stack5"),
-            GetNode<Cascade>("Stack6"),
-            GetNode<Cascade>("Stack7"),
-            GetNode<Cascade>("Stack8"),
+        cascades =
+        [
+            (Cascade)GetNode<Area2D>("Stack"),
+            // GetNode<Cascade>("Stack2"),
+            // GetNode<Cascade>("Stack3"),
+            // GetNode<Cascade>("Stack4"),
+            // GetNode<Cascade>("Stack5"),
+            // GetNode<Cascade>("Stack6"),
+            // GetNode<Cascade>("Stack7"),
+            // GetNode<Cascade>("Stack8"),
         ];
 
         int cardDeckSize = 13 * 4; // 52 cards.
@@ -52,9 +52,7 @@ public partial class GameManager : Node2D
         card.Stack = stack;
         card.Order = stack.CardsOnStack.Count;
 
-
         stack.CardsOnStack.Add(card);
-
 
         card.TeleportToStack();
         AddChild(card);
