@@ -51,7 +51,7 @@ public partial class Card : Area2D
         ZIndex = Order;
     }
 
-    private void _process()
+    private void _process(float _)
     {
         if (dragged)
         {

@@ -14,14 +14,14 @@ public partial class GameManager : Node2D
     {
         cascades =
         [
-            (Cascade)GetNode<Area2D>("Stack"),
-            // GetNode<Cascade>("Stack2"),
-            // GetNode<Cascade>("Stack3"),
-            // GetNode<Cascade>("Stack4"),
-            // GetNode<Cascade>("Stack5"),
-            // GetNode<Cascade>("Stack6"),
-            // GetNode<Cascade>("Stack7"),
-            // GetNode<Cascade>("Stack8"),
+            GetNode<Cascade>("Stack"),
+            GetNode<Cascade>("Stack2"),
+            GetNode<Cascade>("Stack3"),
+            GetNode<Cascade>("Stack4"),
+            GetNode<Cascade>("Stack5"),
+            GetNode<Cascade>("Stack6"),
+            GetNode<Cascade>("Stack7"),
+            GetNode<Cascade>("Stack8"),
         ];
 
         int cardDeckSize = 13 * 4; // 52 cards.
@@ -36,7 +36,7 @@ public partial class GameManager : Node2D
         for (int cascadeIndex = 0; cascadeIndex <= cascades.Length; cascadeIndex++)
         {
             var cardsOnStackCount = cascadeIndex < 4 ? 7 : 6;
-            for (int i = 0; i <= cardsOnStackCount; i++)
+            for (int i = 0; i < cardsOnStackCount; i++)
             {
                 spawnCard(cardValues[0], cascades[cascadeIndex]);
                 // FIXME: Might remove the wrong card.

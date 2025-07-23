@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Godot;
 
@@ -11,7 +11,7 @@ public partial class Cursor : Area2D
     private int zindex = 50;
     public Vector2 offset = new(0, 0);
 
-    private void _process()
+    private void _process(float _)
     {
         // follow mouse cursor.
         var mousePosition = GetViewport().GetCamera2D().GetGlobalMousePosition();
