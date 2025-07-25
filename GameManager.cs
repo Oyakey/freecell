@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -12,6 +12,13 @@ public partial class GameManager : Node2D
     // Called when the node enters the scene tree for the first time.
     private void _ready()
     {
+        SetCascades();
+        InitGame();
+    }
+
+    // Set references to all Cascade nodes.
+    private void SetCascades()
+    {
         cascades =
         [
             GetNode<Cascade>("Stack"),
@@ -23,8 +30,11 @@ public partial class GameManager : Node2D
             GetNode<Cascade>("Stack7"),
             GetNode<Cascade>("Stack8"),
         ];
+    }
 
-        int cardDeckSize = 13 * 4; // 52 cards.
+    private void InitGame()
+    {
+        int cardDeckSize = 52; // 52 cards.
         List<int> cardValues = [];
 
         for (int i = 0; i <= cardDeckSize; i++)
@@ -38,14 +48,13 @@ public partial class GameManager : Node2D
             var cardsOnStackCount = cascadeIndex < 4 ? 7 : 6;
             for (int i = 0; i < cardsOnStackCount; i++)
             {
-                spawnCard(cardValues[0], cascades[cascadeIndex]);
-                // FIXME: Might remove the wrong card.
+                SpawnCard(cardValues[0], cascades[cascadeIndex]);
                 cardValues.RemoveAt(0);
             }
         }
     }
 
-    private void spawnCard(int cardValue, Cascade stack)
+    private void SpawnCard(int cardValue, Cascade stack)
     {
         var card = cardScene.Instantiate<Card>();
         card.CardValue = cardValue;

@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Freecell;
+﻿using System.Collections.Generic;
 using Godot;
 
 namespace Freecell;
@@ -77,7 +76,7 @@ public partial class Card : Area2D
         // Proceed to add card to stack.
         Stack.CardsOnStack.Remove(GetNode<Card>("."));
         Stack = newStack;
-        // Order = newStack.CardsOnStack.Count;
+        Order = newStack.CardsOnStack.Count;
         newStack.CardsOnStack.Add(GetNode<Card>("."));
     }
 

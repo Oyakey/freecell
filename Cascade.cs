@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -13,10 +13,11 @@ public partial class Cascade : Stack
 
     public override bool CanAppendCard(int cardValue)
     {
-        var cardOnTop = CardsOnStack.Last();
         // If the stack is empty, we can append any card.
-        if (cardOnTop == null)
+        if (CardsOnStack.Count <= 0)
             return true;
+
+        var cardOnTop = CardsOnStack[^1];
         // The card should not be of the same color.
         if (Card.IsCardRed(cardValue) == Card.IsCardRed(cardOnTop.CardValue))
             return false;
@@ -30,6 +31,7 @@ public partial class Cascade : Stack
     private CollisionShape2D collider;
     private int cardsOnStackLastCount = 0;
 
+    // Godot methods.
     private void _ready()
     {
         collider = GetNode<CollisionShape2D>($"./Collider");
@@ -40,10 +42,17 @@ public partial class Cascade : Stack
         if (CardsOnStack.Count == cardsOnStackLastCount)
             return;
         cardsOnStackLastCount = CardsOnStack.Count;
+        AdjustStackHeight();
+    }
+
+    // Local methods.
+    private void AdjustStackHeight()
+    {
         var shape = new RectangleShape2D();
         float absoluteStackedCards = Mathf.Max(CardsOnStack.Count - 1, 0);
         var height = 17;
         shape.Size = new Vector2(48, 64 + height * absoluteStackedCards);
+        // Adjust collider position so that its top is aligned with the top of the stack.
         collider.Position = new Vector2(0, 8.5f * absoluteStackedCards);
         collider.Shape = shape;
     }
