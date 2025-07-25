@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7novhig0f5m"]
+[gd_scene load_steps=8 format=3 uid="uid://b7novhig0f5m"]
 
 [ext_resource type="Script" uid="uid://bjedeqp8sggm" path="res://GameManager.cs" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://3vdh745pvbsa" path="res://cursor.tscn" id="2_3tdco"]
 [ext_resource type="PackedScene" uid="uid://bccd8l4qav5fc" path="res://stack.tscn" id="3_yjldg"]
 [ext_resource type="PackedScene" uid="uid://c1a0bc7cp1wd2" path="res://freecell.tscn" id="4_7t7vt"]
 [ext_resource type="PackedScene" uid="uid://dm3xcrqkg8bqx" path="res://foundation.tscn" id="5_dumri"]
+[ext_resource type="Script" uid="uid://cewok034pi0jb" path="res://VictoryScreen.cs" id="6_272bh"]
+[ext_resource type="Texture2D" uid="uid://d3ldm204dbhnu" path="res://173113511-colorful-simple-flat-pixel-art-illustration-of-cartoon-golden-inscription-you-win-on-a-black.jpg" id="7_5vw27"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_lquwl")
@@ -74,3 +76,26 @@ offset_top = -385.0
 offset_right = 671.0
 offset_bottom = 379.0
 color = Color(0.289835, 0.49, 0.2107, 1)
+
+[node name="Victory screen" type="Control" parent="."]
+visible = false
+z_index = 4096
+z_as_relative = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("6_272bh")
+
+[node name="ColorRect" type="ColorRect" parent="Victory screen"]
+layout_mode = 0
+offset_left = -347.0
+offset_top = -215.0
+offset_right = 366.0
+offset_bottom = 219.0
+color = Color(0.129412, 0.0862745, 0.00392157, 1)
+
+[node name="173113511-colorful-simple-flat-pixel-art-illustration-of-cartoon-golden-inscription-you-win-on-a-black" type="Sprite2D" parent="Victory screen"]
+position = Vector2(-7.56979e-06, 7.62939e-06)
+scale = Vector2(0.575556, 0.575556)
+texture = ExtResource("7_5vw27")
