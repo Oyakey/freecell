@@ -37,7 +37,7 @@ public partial class GameManager : Node2D
         int cardDeckSize = 52; // 52 cards.
         List<int> cardValues = [];
 
-        for (int i = 0; i <= cardDeckSize; i++)
+        for (int i = 0; i < cardDeckSize; i++)
         {
             cardValues.Add(i);
         }
