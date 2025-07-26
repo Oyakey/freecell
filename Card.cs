@@ -7,10 +7,11 @@ public partial class Card : Area2D
 {
     public const int CardCountByColor = 13;
     public const int CARD_COUNT_BY_COLOR = 13;
-    public List<Stack> CollidingStacks
+    public List<Stack> CollidingStacks { get; set; } = [];
+    public bool Hovered
     {
-        get => collidingStacks;
-        set { collidingStacks = value; }
+        get => CanMoveCard() && _outline.Visible;
+        set => _outline.Visible = CanMoveCard() && value;
     }
 
     public string ObjectType = "CARD";
@@ -19,9 +20,9 @@ public partial class Card : Area2D
     public int Order = 0;
 
     private AnimatedSprite2D _animated_sprite;
-    private List<Stack> collidingStacks = [];
-    private bool snapping = false;
-    private bool dragged = false;
+    private bool _snapping = false;
+    private bool _dragged = false;
+    private AnimatedSprite2D _outline;
 
     // Static methods.
     public static int GetCardNumber(int value)
@@ -45,6 +46,7 @@ public partial class Card : Area2D
     // Godot methods.
     private void _ready()
     {
+        _outline = GetNode<AnimatedSprite2D>("Outline");
         _animated_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animated_sprite.SetFrameAndProgress(CardValue, 0);
         ZIndex = Order;
@@ -52,9 +54,9 @@ public partial class Card : Area2D
 
     private void _process(float _)
     {
-        if (dragged)
+        if (_dragged)
         {
-            dragged = false;
+            _dragged = false;
             SnapToStack();
         }
     }
@@ -62,7 +64,7 @@ public partial class Card : Area2D
     // Public methods.
     public void AddToStack()
     {
-        dragged = true;
+        _dragged = true;
         var newStack = GetClosestStack();
 
         // Check if card can be added to stack.
@@ -110,18 +112,18 @@ public partial class Card : Area2D
 
     private void _on_area_entered(Stack area)
     {
-        collidingStacks.Add(area);
+        CollidingStacks.Add(area);
     }
 
     private void _on_area_exited(Stack area)
     {
-        collidingStacks.Remove(area);
+        CollidingStacks.Remove(area);
     }
 
     private Stack GetClosestStack()
     {
         Stack closestStack = null;
-        foreach (var collidingStack in collidingStacks)
+        foreach (var collidingStack in CollidingStacks)
         {
             if (closestStack == null)
             {
