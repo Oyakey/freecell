@@ -1,6 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dm3xcrqkg8bqx"]
+[gd_scene load_steps=7 format=3 uid="uid://dm3xcrqkg8bqx"]
 
 [ext_resource type="Script" uid="uid://0he3omhw3xj1" path="res://Foundation.cs" id="1_2m1qn"]
+[ext_resource type="Texture2D" uid="uid://cde72thggvibx" path="res://Club.png" id="2_0vhpa"]
+[ext_resource type="Texture2D" uid="uid://bbkajox217df8" path="res://Heart.png" id="2_4ssfp"]
+[ext_resource type="Texture2D" uid="uid://2hivvnywtr5w" path="res://Diamond.png" id="3_g5oca"]
+[ext_resource type="Texture2D" uid="uid://cddftvk3uftoe" path="res://Spade.png" id="3_yd7jk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ahx50"]
 size = Vector2(48, 64)
@@ -25,3 +29,22 @@ color = Color(0.49, 1, 0.524, 0.164706)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("RectangleShape2D_ahx50")
+
+[node name="Heart" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_4ssfp")
+
+[node name="Diamond" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+texture = ExtResource("3_g5oca")
+
+[node name="Club" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+texture = ExtResource("2_0vhpa")
+
+[node name="Spade" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+texture = ExtResource("3_yd7jk")
