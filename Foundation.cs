@@ -39,10 +39,10 @@ public partial class Foundation : Stack
                 _diamond.Visible = true;
                 break;
             case 2:
-                _club.Visible = true;
+                _spade.Visible = true;
                 break;
             case 3:
-                _spade.Visible = true;
+                _club.Visible = true;
                 break;
         }
     }
