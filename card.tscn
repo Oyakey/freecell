@@ -1,13 +1,14 @@
-[gd_scene load_steps=59 format=3 uid="uid://bvtm5lvfa8qsl"]
+[gd_scene load_steps=60 format=3 uid="uid://bvtm5lvfa8qsl"]
 
 [ext_resource type="Texture2D" uid="uid://bik42orlcetlw" path="res://1.2 Poker cards.png" id="1_7qk12"]
 [ext_resource type="Shader" uid="uid://f42sxu0lgvew" path="res://card.gdshader" id="1_q5obu"]
 [ext_resource type="Script" uid="uid://bp0eqf13fauvo" path="res://Card.cs" id="1_rjlel"]
+[ext_resource type="Texture2D" uid="uid://b3yiqasc1od7p" path="res://blank-card.png" id="3_e484p"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_q5obu"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpac0"]
 shader = ExtResource("1_q5obu")
 shader_parameter/main_color = Color(0, 0.666667, 1, 1)
-shader_parameter/accent_color = Color(0, 0.416667, 1, 1)
+shader_parameter/accent_color = Color(0, 0.415686, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3lxbl"]
 atlas = ExtResource("1_7qk12")
@@ -387,12 +388,12 @@ size = Vector2(48, 64)
 [node name="Card" type="Area2D"]
 script = ExtResource("1_rjlel")
 
-[node name="Outline" type="AnimatedSprite2D" parent="."]
+[node name="Outline" type="Sprite2D" parent="."]
+visible = false
 texture_filter = 1
-material = SubResource("ShaderMaterial_q5obu")
-position = Vector2(1.01328e-06, -9.53674e-07)
+material = SubResource("ShaderMaterial_fpac0")
 scale = Vector2(1.08333, 1.0625)
-sprite_frames = SubResource("SpriteFrames_yr1xg")
+texture = ExtResource("3_e484p")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
