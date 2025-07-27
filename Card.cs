@@ -47,6 +47,7 @@ public partial class Card : Area2D
     private void _ready()
     {
         _outline = GetNode<AnimatedSprite2D>("Outline");
+        _outline.Visible = false;
         _animated_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animated_sprite.SetFrameAndProgress(CardValue, 0);
         ZIndex = Order;
