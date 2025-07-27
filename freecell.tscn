@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1a0bc7cp1wd2"]
+[gd_scene load_steps=4 format=3 uid="uid://c1a0bc7cp1wd2"]
 
 [ext_resource type="Script" uid="uid://bwueu5af0cln7" path="res://Freecell.cs" id="1_tw5yw"]
+[ext_resource type="Texture2D" uid="uid://b3yiqasc1od7p" path="res://blank-card.png" id="2_gyfp0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ahx50"]
 size = Vector2(48, 64)
@@ -8,19 +9,10 @@ size = Vector2(48, 64)
 [node name="Freecell" type="Area2D"]
 script = ExtResource("1_tw5yw")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -24.0
-offset_top = -32.0
-offset_right = 24.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.49, 1, 0.524, 0.164706)
+[node name="Blank card" type="Sprite2D" parent="."]
+modulate = Color(0.59, 1, 0.617333, 0.164706)
+texture_filter = 1
+texture = ExtResource("2_gyfp0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

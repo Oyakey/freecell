@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dm3xcrqkg8bqx"]
+[gd_scene load_steps=8 format=3 uid="uid://dm3xcrqkg8bqx"]
 
 [ext_resource type="Script" uid="uid://0he3omhw3xj1" path="res://Foundation.cs" id="1_2m1qn"]
 [ext_resource type="Texture2D" uid="uid://cde72thggvibx" path="res://Club.png" id="2_0vhpa"]
 [ext_resource type="Texture2D" uid="uid://bbkajox217df8" path="res://Heart.png" id="2_4ssfp"]
+[ext_resource type="Texture2D" uid="uid://b3yiqasc1od7p" path="res://blank-card.png" id="2_g5oca"]
 [ext_resource type="Texture2D" uid="uid://2hivvnywtr5w" path="res://Diamond.png" id="3_g5oca"]
 [ext_resource type="Texture2D" uid="uid://cddftvk3uftoe" path="res://Spade.png" id="3_yd7jk"]
 
@@ -12,22 +13,14 @@ size = Vector2(48, 64)
 [node name="Foundation" type="Area2D"]
 script = ExtResource("1_2m1qn")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -24.0
-offset_top = -32.0
-offset_right = 24.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.49, 1, 0.524, 0.164706)
+[node name="Blank card" type="Sprite2D" parent="."]
+modulate = Color(0.59, 1, 0.617333, 0.164706)
+texture_filter = 1
+texture = ExtResource("2_g5oca")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
+modulate = Color(0.49, 1, 0.524, 0.184314)
 shape = SubResource("RectangleShape2D_ahx50")
 
 [node name="Heart" type="Sprite2D" parent="."]
