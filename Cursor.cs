@@ -18,10 +18,9 @@ public partial class Cursor : Area2D
 
         var colliding = getFirstCollider();
 
-        if (colliding is Card)
+        if (colliding is Card cardArea && !cardArea.Hovered)
         {
-            var cardArea = (Card)colliding;
-            cardArea.Hovered = true;
+            cardArea.ShowOutline();
         }
 
         if (dragging != null)
@@ -62,10 +61,9 @@ public partial class Cursor : Area2D
 
     private void _on_area_exited(Area2D area)
     {
-        if (area is Card)
+        if (area is Card cardArea && cardArea.Hovered)
         {
-            var cardArea = (Card)area;
-            cardArea.Hovered = false;
+            cardArea.HideOutline();
         }
         CollidingAreas.Remove(area);
     }
