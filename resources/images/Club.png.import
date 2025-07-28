@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cddftvk3uftoe"
-path="res://.godot/imported/Spade.png-62ce8f5b2caa957d930882cc57801d98.ctex"
+uid="uid://cde72thggvibx"
+path="res://.godot/imported/Club.png-1fd2f26e0bc10ede723a0feb904f2c8c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Spade.png"
-dest_files=["res://.godot/imported/Spade.png-62ce8f5b2caa957d930882cc57801d98.ctex"]
+source_file="res://resources/images/Club.png"
+dest_files=["res://.godot/imported/Club.png-1fd2f26e0bc10ede723a0feb904f2c8c.ctex"]
 
 [params]
 

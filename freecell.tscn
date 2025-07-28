@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c1a0bc7cp1wd2"]
 
 [ext_resource type="Script" uid="uid://bwueu5af0cln7" path="res://Freecell.cs" id="1_tw5yw"]
-[ext_resource type="Texture2D" uid="uid://b3yiqasc1od7p" path="res://blank-card.png" id="2_gyfp0"]
+[ext_resource type="Texture2D" uid="uid://b3yiqasc1od7p" path="res://resources/images/blank-card.png" id="2_gyfp0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ahx50"]
 size = Vector2(48, 64)
