@@ -43,7 +43,7 @@ public partial class GameManager : Node2D
         }
 
         Shuffle(cardValues);
-        for (int cascadeIndex = 0; cascadeIndex <= cascades.Length; cascadeIndex++)
+        for (int cascadeIndex = 0; cascadeIndex < cascades.Length; cascadeIndex++)
         {
             var cardsOnStackCount = cascadeIndex < 4 ? 7 : 6;
             for (int i = 0; i < cardsOnStackCount; i++)
