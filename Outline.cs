@@ -1,24 +1,36 @@
-﻿using Godot;
+using Godot;
 
 namespace Freecell;
 
 public partial class Outline : Sprite2D
 {
-    public void PlayShowAnimation()
-    {
-        var tween = GetTree().CreateTween();
+	private Vector2 _defaultScale;
 
-        GD.Print("playing show animation");
-        tween.TweenMethod(
-            Callable.From<float>(set_animation_progress),
-            0f,
-            1f,
-            .2
-        ).SetEase(Tween.EaseType.InOut);
-    }
+	private void _ready()
+	{
+		_defaultScale = Scale;
+	}
 
-    private void set_animation_progress(float value)
-    {
-        ((ShaderMaterial)Material).SetShaderParameter("outline_visibility", value);
-    }
+	public void PlayShowAnimation()
+	{
+		var tween = GetTree().CreateTween();
+
+		GD.Print("playing show animation");
+		tween.TweenMethod(
+			Callable.From<float>(setAnimationProgress),
+			0f,
+			1f,
+			.2
+		).SetEase(Tween.EaseType.InOut);
+	}
+
+	public void LerpDragging(float value)
+	{
+		Scale = _defaultScale.Lerp(_defaultScale * 1.05f, value);
+	}
+
+	private void setAnimationProgress(float value)
+	{
+		((ShaderMaterial)Material).SetShaderParameter("outline_visibility", value);
+	}
 }

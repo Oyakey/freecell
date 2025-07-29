@@ -8,7 +8,7 @@ public partial class Cursor : Area2D
     public List<Area2D> CollidingAreas = [];
     public Card dragging = null;
     private int zindex = 50;
-    public Vector2 offset = new(0, 0);
+    private Vector2 offset;
 
     private void _process(float _)
     {
@@ -32,6 +32,7 @@ public partial class Cursor : Area2D
             else
             {
                 dragging.AddToStack();
+                dragging.HideDragging();
                 dragging = null;
             }
         }
@@ -48,6 +49,7 @@ public partial class Cursor : Area2D
                     zindex++;
                     dragging.ZIndex = zindex;
                     offset = dragging.Position - Position;
+                    dragging.ShowDragging();
                 }
             }
         }
