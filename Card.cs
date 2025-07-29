@@ -15,10 +15,12 @@ public partial class Card : Area2D
     public Stack Stack = null;
     public int Order = 0;
 
-    private AnimatedSprite2D _animated_sprite;
+    private AnimatedSprite2D _cardNode;
     private bool _snapping = false;
     private bool _dragged = false;
     private Outline _outline;
+    private Sprite2D _shadow;
+    private Vector2 defaultScale;
 
     // Static methods.
     public static int GetCardNumber(int value)
@@ -42,11 +44,18 @@ public partial class Card : Area2D
     // Godot methods.
     private void _ready()
     {
+        defaultScale = Scale;
+
+        ZIndex = Order;
+
         _outline = GetNode<Outline>("Outline");
         _outline.Visible = false;
-        _animated_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-        _animated_sprite.SetFrameAndProgress(CardValue, 0);
-        ZIndex = Order;
+
+        _cardNode = GetNode<AnimatedSprite2D>("Card");
+        _cardNode.SetFrameAndProgress(CardValue, 0);
+
+        _shadow = GetNode<Sprite2D>("Shadow");
+        _shadow.Visible = false;
     }
 
     private void _process(float _)
@@ -120,6 +129,51 @@ public partial class Card : Area2D
         if (Stack == null)
             return;
         Position = Stack.Position + Stack.CardOffset * Order;
+    }
+
+    public void ShowDragging()
+    {
+        float transitionDuration = .15f;
+
+        if (_shadow.Visible)
+            return;
+
+        _shadow.Visible = true;
+
+        var tween = GetTree().CreateTween();
+
+        // Play all animations in parallel.
+        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale * 1.05f, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_shadow, "position", new Vector2(6f, 6f), transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenMethod(
+            Callable.From((float value) => _outline.LerpDragging(value)),
+            0f,
+            1f,
+            transitionDuration
+        ).SetEase(Tween.EaseType.InOut);
+    }
+
+    public void HideDragging()
+    {
+        float transitionDuration = .15f;
+
+        if (!_shadow.Visible)
+            return;
+
+        var tween = GetTree().CreateTween();
+
+        // Play all animations in parallel.
+        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_shadow, "position", new Vector2(0f, 0f), transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenMethod(
+            Callable.From((float value) => _outline.LerpDragging(value)),
+            1f,
+            0f,
+            transitionDuration
+        ).SetEase(Tween.EaseType.InOut);
+
+        // Then, hide the shadow.
+        tween.TweenCallback(Callable.From(() => _shadow.Visible = false));
     }
 
     private void _on_area_entered(Area2D area)
