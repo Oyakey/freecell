@@ -133,44 +133,34 @@ public partial class Card : Area2D
 
     public void ShowDragging()
     {
-        float transitionDuration = .15f;
-
         if (_shadow.Visible)
             return;
 
-        _shadow.Visible = true;
-
+        float transitionDuration = .15f;
+        float scaleTransitionFactor = 1.05f;
+        Vector2 shadowFinalPosition = new Vector2(6f, 6f);
         var tween = GetTree().CreateTween();
 
+        _shadow.Visible = true;
+
         // Play all animations in parallel.
-        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale * 1.05f, transitionDuration).SetEase(Tween.EaseType.InOut);
-        tween.Parallel().TweenProperty(_shadow, "position", new Vector2(6f, 6f), transitionDuration).SetEase(Tween.EaseType.InOut);
-        tween.Parallel().TweenMethod(
-            Callable.From((float value) => _outline.LerpDragging(value)),
-            0f,
-            1f,
-            transitionDuration
-        ).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale * scaleTransitionFactor, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_outline, "scale", _outline.DefaultScale * scaleTransitionFactor, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_shadow, "position", shadowFinalPosition, transitionDuration).SetEase(Tween.EaseType.InOut);
     }
 
     public void HideDragging()
     {
-        float transitionDuration = .15f;
-
         if (!_shadow.Visible)
             return;
 
+        float transitionDuration = .15f;
         var tween = GetTree().CreateTween();
 
         // Play all animations in parallel.
         tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
-        tween.Parallel().TweenProperty(_shadow, "position", new Vector2(0f, 0f), transitionDuration).SetEase(Tween.EaseType.InOut);
-        tween.Parallel().TweenMethod(
-            Callable.From((float value) => _outline.LerpDragging(value)),
-            1f,
-            0f,
-            transitionDuration
-        ).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_outline, "scale", _outline.DefaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_shadow, "position", Vector2.Zero, transitionDuration).SetEase(Tween.EaseType.InOut);
 
         // Then, hide the shadow.
         tween.TweenCallback(Callable.From(() => _shadow.Visible = false));
