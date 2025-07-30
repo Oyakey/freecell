@@ -5,80 +5,130 @@ namespace Freecell;
 
 public partial class Cursor : Area2D
 {
-    public List<Area2D> CollidingAreas = [];
-    public Card dragging = null;
-    private int zindex = 50;
-    private Vector2 offset;
+    private Card _draggingCard;
+    private int _zindex = 50; // Defaults to 50, that may not be necessary.
+    private Vector2 _offset;
+    private readonly List<Card> _collidingCards = [];
+    private Card _firstCollidingCard;
+
+    // Godot methods.
 
     private void _process(float _)
     {
-        // follow mouse cursor.
-        var mousePosition = GetViewport().GetCamera2D().GetGlobalMousePosition();
-        Position = mousePosition;
-
-        var colliding = getFirstCollider();
-
-        if (colliding is Card cardArea && !cardArea.Hovered)
-        {
-            cardArea.ShowOutline();
-        }
-
-        if (dragging != null)
-        {
-            if (Input.IsActionPressed("leftMouse"))
-            {
-                dragging.Position = mousePosition + offset;
-            }
-            else
-            {
-                dragging.AddToStack();
-                dragging.HideDragging();
-                dragging = null;
-            }
-        }
-        else
-        {
-            if (colliding != null && Input.IsActionPressed("leftMouse"))
-            {
-                if (colliding is not Card)
-                    return;
-                var collidingCard = (Card)colliding;
-                if (collidingCard.CanMoveCard())
-                {
-                    dragging = collidingCard;
-                    zindex++;
-                    dragging.ZIndex = zindex;
-                    offset = dragging.Position - Position;
-                    dragging.ShowDragging();
-                }
-            }
-        }
+        HandleHover();
+        HandlePosition();
+        HandleDragging();
     }
+
+    // Godot signal handlers.
 
     private void _on_area_entered(Area2D area)
     {
-        if (area is Card)
-            CollidingAreas.Add(area);
+        if (area is not Card card)
+        {
+            return;
+        }
+
+        _collidingCards.Add(card);
+
+        // Update first colliding card.
+        if (_firstCollidingCard == null || _firstCollidingCard.ZIndex < card.ZIndex)
+        {
+            _firstCollidingCard = card;
+        }
     }
 
     private void _on_area_exited(Area2D area)
     {
-        if (area is Card cardArea && cardArea.Hovered)
+        if (area is not Card card)
+            return;
+
+        if (card.Hovered)
         {
-            cardArea.HideOutline();
+            card.HideOutline();
         }
-        CollidingAreas.Remove(area);
+
+        _collidingCards.Remove(card);
+
+        if (card == _firstCollidingCard)
+        {
+            _firstCollidingCard = GetFirstCollidingCard();
+        }
     }
 
-    private Area2D getFirstCollider()
+    // Private methods.
+
+    private void HandlePosition()
     {
-        Area2D areaOnTop = null;
-        foreach (var area in CollidingAreas)
+        // Make node follow mouse cursor.
+        var mousePosition = GetViewport().GetCamera2D().GetGlobalMousePosition();
+        Position = mousePosition;
+    }
+
+    private void HandleDragging()
+    {
+        var isDragging = _draggingCard != null;
+        var isMouseButtonPressed = Input.IsActionPressed("leftMouse");
+
+        if (isDragging)
+        {
+            if (!isMouseButtonPressed)
+            {
+                StopDragging();
+                return;
+            }
+            CardFollowCursor();
+            return;
+        }
+
+        if (
+            isMouseButtonPressed &&
+            _firstCollidingCard != null &&
+            _firstCollidingCard.CanMoveCard()
+        )
+        {
+            StartDragging(_firstCollidingCard);
+        }
+    }
+
+    private void HandleHover()
+    {
+        var isDragging = _draggingCard != null;
+
+        if (isDragging) return;
+
+        _firstCollidingCard?.ShowOutline();
+    }
+
+    private void StartDragging(Card card)
+    {
+        _draggingCard = card;
+        _zindex++;
+        _draggingCard.ZIndex = _zindex;
+        _offset = _draggingCard.Position - Position;
+        _draggingCard.ShowDragging();
+    }
+
+    private void StopDragging()
+    {
+        _draggingCard.AddToStack();
+        _draggingCard.HideDragging();
+        _draggingCard = null;
+    }
+
+    private void CardFollowCursor()
+    {
+        _draggingCard.Position = Position + _offset;
+    }
+
+    private Card GetFirstCollidingCard()
+    {
+        Card areaOnTop = null;
+        foreach (var area in _collidingCards)
         {
             if (areaOnTop == null || areaOnTop.ZIndex < area.ZIndex)
             {
                 areaOnTop = area;
-                continue;
             }
         }
         return areaOnTop;
