@@ -23,6 +23,7 @@ public partial class Card : Area2D
     private Vector2 defaultScale;
 
     // Static methods.
+
     public static int GetCardNumber(int value)
     {
         return value % CardCountByColor;
@@ -42,6 +43,7 @@ public partial class Card : Area2D
     }
 
     // Godot methods.
+
     private void _ready()
     {
         defaultScale = Scale;
@@ -68,6 +70,7 @@ public partial class Card : Area2D
     }
 
     // Public methods.
+
     public void AddToStack()
     {
         _dragged = true;
@@ -82,10 +85,10 @@ public partial class Card : Area2D
             return;
 
         // Proceed to add card to stack.
-        Stack.CardsOnStack.Remove(GetNode<Card>("."));
+        Stack.CardsOnStack.Remove(this);
         Stack = newStack;
         Order = newStack.CardsOnStack.Count;
-        newStack.CardsOnStack.Add(GetNode<Card>("."));
+        newStack.CardsOnStack.Add(this);
     }
 
     public bool CanMoveCard()
@@ -108,20 +111,6 @@ public partial class Card : Area2D
             return;
         _outline.Visible = false;
         // TODO: Add a hide animation.
-    }
-
-    // Private methods.
-    private void SnapToPos(Vector2 pos)
-    {
-        var tween = GetTree().CreateTween();
-        tween.TweenProperty(GetNode("."), "position", new Vector2(pos.X, pos.Y), .15);
-    }
-
-    private void SnapToStack()
-    {
-        if (Stack == null)
-            return;
-        SnapToPos(Stack.Position + Stack.CardOffset * Order);
     }
 
     public void TeleportToStack()
@@ -164,6 +153,21 @@ public partial class Card : Area2D
 
         // Then, hide the shadow.
         tween.TweenCallback(Callable.From(() => _shadow.Visible = false));
+    }
+
+    // Private methods.
+
+    private void SnapToPos(Vector2 pos)
+    {
+        var tween = GetTree().CreateTween();
+        tween.TweenProperty(this, "position", new Vector2(pos.X, pos.Y), .15);
+    }
+
+    private void SnapToStack()
+    {
+        if (Stack == null)
+            return;
+        SnapToPos(Stack.Position + Stack.CardOffset * Order);
     }
 
     private void _on_area_entered(Area2D area)
