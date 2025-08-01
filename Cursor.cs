@@ -10,6 +10,8 @@ public partial class Cursor : Area2D
     private Vector2 _offset;
     private readonly List<Card> _collidingCards = [];
     private Card _firstCollidingCard;
+    private const float _quickClickTiming = 0.2f; // In seconds.
+    private float _quickClickEndTime;
 
     // Godot methods.
 
@@ -74,6 +76,11 @@ public partial class Cursor : Area2D
         {
             if (!isMouseButtonPressed)
             {
+                if (Time.GetTicksMsec() <= _quickClickEndTime)
+                {
+                    SmartMove();
+                    return;
+                }
                 StopDragging();
                 return;
             }
@@ -88,6 +95,7 @@ public partial class Cursor : Area2D
         )
         {
             StartDragging(_firstCollidingCard);
+            _quickClickEndTime = Time.GetTicksMsec() + _quickClickTiming * 1000;
         }
     }
 
@@ -111,7 +119,7 @@ public partial class Cursor : Area2D
 
     private void StopDragging()
     {
-        _draggingCard.AddToStack();
+        _draggingCard.AddToClosestStack();
         _draggingCard.HideDragging();
         _draggingCard = null;
     }
@@ -119,6 +127,22 @@ public partial class Cursor : Area2D
     private void CardFollowCursor()
     {
         _draggingCard.Position = Position + _offset;
+    }
+
+    private void SmartMove()
+    {
+        if (_firstCollidingCard == null || !_firstCollidingCard.CanMoveCard())
+        {
+            return;
+        }
+
+        var bestStackToMoveTo = GameManager.FindBestValidStackForCard(_draggingCard);
+        if (bestStackToMoveTo != null)
+        {
+            _draggingCard.AddToStack(bestStackToMoveTo);
+            _draggingCard.HideDragging();
+            _draggingCard = null;
+        }
     }
 
     private Card GetFirstCollidingCard()

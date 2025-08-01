@@ -12,7 +12,7 @@ public partial class Card : Area2D
 
     public string ObjectType = "CARD";
     public int CardValue = 0;
-    public Stack Stack = null;
+    public Stack CurrentStack = null;
     public int Order = 0;
 
     private AnimatedSprite2D _cardNode;
@@ -65,35 +65,36 @@ public partial class Card : Area2D
         if (_dragged)
         {
             _dragged = false;
-            SnapToStack();
+            SnapToCurrentStack();
         }
     }
 
     // Public methods.
 
-    public void AddToStack()
+    public void AddToClosestStack()
+    {
+        var newStack = GetClosestStack();
+        AddToStack(newStack);
+    }
+
+    public void AddToStack(Stack stack)
     {
         _dragged = true;
-        var newStack = GetClosestStack();
 
         // Check if card can be added to stack.
-        if (newStack == null)
-            return;
-        if (!newStack.CanAppendCard(CardValue))
-            return;
-        if (Stack == null)
+        if (stack == null || !stack.CanAppendCard(CardValue) || CurrentStack == null)
             return;
 
         // Proceed to add card to stack.
-        Stack.CardsOnStack.Remove(this);
-        Stack = newStack;
-        Order = newStack.CardsOnStack.Count;
-        newStack.CardsOnStack.Add(this);
+        CurrentStack.CardsOnStack.Remove(this);
+        CurrentStack = stack;
+        Order = stack.CardsOnStack.Count;
+        stack.CardsOnStack.Add(this);
     }
 
     public bool CanMoveCard()
     {
-        if (Stack is Cascade && Stack.CardsOnStack.Count > Order + 1)
+        if (CurrentStack is Cascade && CurrentStack.CardsOnStack.Count > Order + 1)
             return false;
         return true;
     }
@@ -115,9 +116,9 @@ public partial class Card : Area2D
 
     public void TeleportToStack()
     {
-        if (Stack == null)
+        if (CurrentStack == null)
             return;
-        Position = Stack.Position + Stack.CardOffset * Order;
+        Position = CurrentStack.Position + CurrentStack.CardOffset * Order;
     }
 
     public void ShowDragging()
@@ -163,11 +164,11 @@ public partial class Card : Area2D
         tween.TweenProperty(this, "position", new Vector2(pos.X, pos.Y), .15);
     }
 
-    private void SnapToStack()
+    private void SnapToCurrentStack()
     {
-        if (Stack == null)
+        if (CurrentStack == null)
             return;
-        SnapToPos(Stack.Position + Stack.CardOffset * Order);
+        SnapToPos(CurrentStack.Position + CurrentStack.CardOffset * Order);
     }
 
     private void _on_area_entered(Area2D area)

@@ -1,19 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
+using Godot.Collections;
 
 namespace Freecell;
 
 public partial class GameManager : Node2D
 {
     private PackedScene cardScene = ResourceLoader.Load<PackedScene>("res://card.tscn");
-    private Cascade[] cascades = [];
+    private static Cascade[] cascades = [];
+    private static Freecell[] freecells = [];
+    private static Foundation[] foundations = [];
 
     // Called when the node enters the scene tree for the first time.
     private void _ready()
     {
         SetCascades();
+        SetFreecells();
+        SetFoundations();
         InitGame();
+    }
+
+    public static Stack FindBestValidStackForCard(Card card)
+    {
+        // Prioritize foundations.
+        var validFoundations = FindValidStacksForCard(card, foundations);
+        if (validFoundations.Count > 0)
+            return validFoundations[0];
+
+        var validCascades = FindValidStacksForCard(card, cascades);
+
+        // Then look for a cascade with cards on stack.
+        foreach (var cascade in validCascades)
+        {
+            if (cascade.CardsOnStack.Count > 0)
+                return cascade;
+        }
+
+        // Then look for a valid freecell.
+        var validFreecells = FindValidStacksForCard(card, freecells);
+        if (validFreecells.Count > 0)
+            return validFreecells[0];
+
+        // Finally, look for a valid empty cascade.
+        if (validCascades.Count > 0)
+            return validCascades[0];
+
+        return null;
+    }
+
+    private static List<Stack> FindValidStacksForCard(Card card, Stack[] stacks)
+    {
+        List<Stack> validStacks = [];
+        foreach (var stack in stacks)
+        {
+            if (card.CurrentStack != stack && stack.CanAppendCard(card.CardValue))
+            {
+                validStacks.Add(stack);
+            }
+        }
+        return validStacks;
     }
 
     // Set references to all Cascade nodes.
@@ -29,6 +76,26 @@ public partial class GameManager : Node2D
             GetNode<Cascade>("Stack6"),
             GetNode<Cascade>("Stack7"),
             GetNode<Cascade>("Stack8"),
+        ];
+    }
+
+    private void SetFreecells()
+    {
+        freecells = [
+            GetNode<Freecell>("Freecell"),
+            GetNode<Freecell>("Freecell2"),
+            GetNode<Freecell>("Freecell3"),
+            GetNode<Freecell>("Freecell4"),
+        ];
+    }
+
+    private void SetFoundations()
+    {
+        foundations = [
+            GetNode<Foundation>("Foundation Hearts"),
+            GetNode<Foundation>("Foundation Clubs"),
+            GetNode<Foundation>("Foundation Diamonds"),
+            GetNode<Foundation>("Foundation Spades"),
         ];
     }
 
@@ -58,7 +125,7 @@ public partial class GameManager : Node2D
     {
         var card = cardScene.Instantiate<Card>();
         card.CardValue = cardValue;
-        card.Stack = stack;
+        card.CurrentStack = stack;
         card.Order = stack.CardsOnStack.Count;
 
         stack.CardsOnStack.Add(card);
