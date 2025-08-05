@@ -17,7 +17,6 @@ public partial class Outline : Sprite2D
     {
         var tween = GetTree().CreateTween();
 
-        GD.Print("playing show animation");
         tween.TweenMethod(
             Callable.From<float>(setShaderVisibilityProgress),
             0f,
