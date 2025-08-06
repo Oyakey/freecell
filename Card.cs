@@ -5,22 +5,22 @@ namespace Freecell;
 
 public partial class Card : Area2D
 {
+    private static readonly PackedScene cardScene = ResourceLoader.Load<PackedScene>("res://card.tscn");
+
     public const int CardCountByColor = 13;
     public const int CARD_COUNT_BY_COLOR = 13;
     public List<Stack> CollidingStacks { get; set; } = [];
     public bool Hovered { get => CanMoveCard() && _outline.Visible; }
 
-    public string ObjectType = "CARD";
-    public int CardValue = 0;
-    public Stack CurrentStack = null;
+    public int CardValue { get; private set; } = 0;
+    public Stack CurrentStack { get; private set; } = null;
     public int Order = 0;
 
     private AnimatedSprite2D _cardNode;
-    private bool _snapping = false;
-    private bool _dragged = false;
     private Outline _outline;
     private Sprite2D _shadow;
-    private Vector2 defaultScale;
+    private Vector2 _defaultScale;
+    private bool _snapping = false;
 
     // Static methods.
 
@@ -42,11 +42,25 @@ public partial class Card : Area2D
         return color == 0 || color == 1;
     }
 
+    // Static methods.
+
+    public static Card InstantiateCard(int cardValue, Cascade stack)
+    {
+        var card = cardScene.Instantiate<Card>();
+        card.CardValue = cardValue;
+        card.CurrentStack = stack;
+        card.Order = stack.CardsOnStack.Count;
+        stack.CardsOnStack.Add(card);
+        card.TeleportToStack();
+        return card;
+    }
+
+
     // Godot methods.
 
     private void _ready()
     {
-        defaultScale = Scale;
+        _defaultScale = Scale;
 
         ZIndex = Order;
 
@@ -60,43 +74,58 @@ public partial class Card : Area2D
         _shadow.Visible = false;
     }
 
-    private void _process(float _)
-    {
-        if (_dragged)
-        {
-            _dragged = false;
-            SnapToCurrentStack();
-        }
-    }
-
     // Public methods.
 
+    /// <summary>
+    /// Move the card to the closest stack. Used when the user drags and drops a card.
+    /// </summary>
     public void AddToClosestStack()
     {
         var newStack = GetClosestStack();
+
+        if (newStack == null)
+            return;
+
         AddToStack(newStack);
     }
 
+    /// <summary>
+    /// Used when the user tries to move a card to add it to a stack.
+    /// Checks if the card can be added to the stack, and if so, moves it to the stack and updates the game history.
+    /// </summary>
     public void AddToStack(Stack stack)
     {
-        _dragged = true;
-
-        // Check if card can be added to stack.
-        if (stack == null || !stack.CanAppendCard(CardValue) || CurrentStack == null)
+        // If not bypassed, check if card can be added to stack.
+        if (!stack.CanAppendCard(CardValue))
             return;
 
+        // History.push
+
+        MoveToStack(stack);
+    }
+
+    /// <summary>
+    /// Simply moves the card to the stack. No checks are performed.
+    /// </summary>
+    public void MoveToStack(Stack stack)
+    {
+        // If card is already on a stack, remove it from the old stack.
+        CurrentStack?.CardsOnStack.Remove(this);
         // Proceed to add card to stack.
-        CurrentStack.CardsOnStack.Remove(this);
         CurrentStack = stack;
         Order = stack.CardsOnStack.Count;
         stack.CardsOnStack.Add(this);
+        SnapToCurrentStack();
     }
 
-    public bool CanMoveCard()
+    /// <summary>
+    /// Move the card on the current stack without animation. Used when setting up the game.
+    /// </summary>
+    public void TeleportToStack()
     {
-        if (CurrentStack is Cascade && CurrentStack.CardsOnStack.Count > Order + 1)
-            return false;
-        return true;
+        if (CurrentStack == null)
+            return;
+        Position = CurrentStack.Position + CurrentStack.CardOffset * Order;
     }
 
     public void ShowOutline()
@@ -114,13 +143,6 @@ public partial class Card : Area2D
         // TODO: Add a hide animation.
     }
 
-    public void TeleportToStack()
-    {
-        if (CurrentStack == null)
-            return;
-        Position = CurrentStack.Position + CurrentStack.CardOffset * Order;
-    }
-
     public void ShowDragging()
     {
         if (_shadow.Visible)
@@ -134,12 +156,18 @@ public partial class Card : Area2D
         _shadow.Visible = true;
 
         // Play all animations in parallel.
-        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale * scaleTransitionFactor, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_cardNode, "scale", _defaultScale * scaleTransitionFactor, transitionDuration).SetEase(Tween.EaseType.InOut);
         tween.Parallel().TweenProperty(_outline, "scale", _outline.DefaultScale * scaleTransitionFactor, transitionDuration).SetEase(Tween.EaseType.InOut);
         tween.Parallel().TweenProperty(_shadow, "position", shadowFinalPosition, transitionDuration).SetEase(Tween.EaseType.InOut);
     }
 
-    public void HideDragging()
+    public void StopDragging()
+    {
+        SnapToCurrentStack();
+        HideDragging();
+    }
+
+    private void HideDragging()
     {
         if (!_shadow.Visible)
             return;
@@ -148,12 +176,19 @@ public partial class Card : Area2D
         var tween = GetTree().CreateTween();
 
         // Play all animations in parallel.
-        tween.Parallel().TweenProperty(_cardNode, "scale", defaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
+        tween.Parallel().TweenProperty(_cardNode, "scale", _defaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
         tween.Parallel().TweenProperty(_outline, "scale", _outline.DefaultScale, transitionDuration).SetEase(Tween.EaseType.InOut);
         tween.Parallel().TweenProperty(_shadow, "position", Vector2.Zero, transitionDuration).SetEase(Tween.EaseType.InOut);
 
         // Then, hide the shadow.
         tween.TweenCallback(Callable.From(() => _shadow.Visible = false));
+    }
+
+    public bool CanMoveCard()
+    {
+        if (CurrentStack is Cascade && CurrentStack.CardsOnStack.Count > Order + 1)
+            return false;
+        return true;
     }
 
     // Private methods.
