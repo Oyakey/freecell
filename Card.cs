@@ -55,7 +55,6 @@ public partial class Card : Area2D
         return card;
     }
 
-
     // Godot methods.
 
     private void _ready()
