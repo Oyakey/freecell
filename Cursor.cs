@@ -113,7 +113,7 @@ public partial class Cursor : Area2D
     {
         _draggingCard = card;
         _zindex++;
-        _draggingCard.ZIndex = _zindex;
+        _draggingCard.ZIndex = 100;
         _offset = _draggingCard.Position - Position;
         _draggingCard.ShowDragging();
     }

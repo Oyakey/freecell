@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bccd8l4qav5fc" path="res://stack.tscn" id="3_yjldg"]
 [ext_resource type="PackedScene" uid="uid://c1a0bc7cp1wd2" path="res://freecell.tscn" id="4_7t7vt"]
 [ext_resource type="PackedScene" uid="uid://dm3xcrqkg8bqx" path="res://foundation.tscn" id="5_dumri"]
-[ext_resource type="PackedScene" path="res://UndoButton.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://davhamlkadh58" path="res://UndoButton.tscn" id="6_7mycd"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_lquwl")
