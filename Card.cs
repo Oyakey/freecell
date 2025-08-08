@@ -98,7 +98,9 @@ public partial class Card : Area2D
         if (!stack.CanAppendCard(CardValue))
             return;
 
-        // History.push
+        // Add to history.
+        if (CurrentStack != null)
+            HistoryManager.Push(new CardHistoryItem(this, CurrentStack, stack));
 
         MoveToStack(stack);
     }
@@ -194,8 +196,11 @@ public partial class Card : Area2D
 
     private void SnapToPos(Vector2 pos)
     {
+        // Increase ZIndex to make sure the card is always on top of the others while moving.
+        ZIndex = 100; // Arbitrary high value. Another value could be more appropriate.
         var tween = GetTree().CreateTween();
-        tween.TweenProperty(this, "position", new Vector2(pos.X, pos.Y), .15);
+        // After the animation, set the ZIndex to the order of the card.
+        tween.TweenProperty(this, "position", new Vector2(pos.X, pos.Y), .15).Set("zindex", Order);
     }
 
     private void SnapToCurrentStack()
