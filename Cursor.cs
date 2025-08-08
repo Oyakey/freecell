@@ -76,6 +76,7 @@ public partial class Cursor : Area2D
         {
             if (!isMouseButtonPressed)
             {
+                // If the player held the card for a very short time, smart move it.
                 if (Time.GetTicksMsec() <= _quickClickEndTime)
                 {
                     SmartMove();
@@ -120,7 +121,7 @@ public partial class Cursor : Area2D
     private void StopDragging()
     {
         _draggingCard.AddToClosestStack();
-        _draggingCard.HideDragging();
+        _draggingCard.StopDragging();
         _draggingCard = null;
     }
 
@@ -140,7 +141,7 @@ public partial class Cursor : Area2D
         if (bestStackToMoveTo != null)
         {
             _draggingCard.AddToStack(bestStackToMoveTo);
-            _draggingCard.HideDragging();
+            _draggingCard.StopDragging();
             _draggingCard = null;
         }
     }

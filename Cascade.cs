@@ -8,7 +8,6 @@ public partial class Cascade : Stack
 {
     // Mandatory properties.
     public override List<Card> CardsOnStack { get; set; } = [];
-    public override string ObjectType { get; } = "STACK";
     public override Vector2 CardOffset { get; } = new(0, 17);
 
     public override bool CanAppendCard(int cardValue)

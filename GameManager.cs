@@ -8,7 +8,6 @@ namespace Freecell;
 
 public partial class GameManager : Node2D
 {
-    private PackedScene cardScene = ResourceLoader.Load<PackedScene>("res://card.tscn");
     private static Cascade[] cascades = [];
     private static Freecell[] freecells = [];
     private static Foundation[] foundations = [];
@@ -121,16 +120,9 @@ public partial class GameManager : Node2D
         }
     }
 
-    private void SpawnCard(int cardValue, Cascade stack)
+    private void SpawnCard(int cardValue, Cascade cascade)
     {
-        var card = cardScene.Instantiate<Card>();
-        card.CardValue = cardValue;
-        card.CurrentStack = stack;
-        card.Order = stack.CardsOnStack.Count;
-
-        stack.CardsOnStack.Add(card);
-
-        card.TeleportToStack();
+        var card = Card.InstantiateCard(cardValue, cascade);
         AddChild(card);
     }
 

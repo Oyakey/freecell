@@ -7,7 +7,6 @@ public partial class Foundation : Stack
 {
     // Mandatory properties.
     public override List<Card> CardsOnStack { get; set; } = [];
-    public override string ObjectType { get; } = "FOUNDATION";
     public override Vector2 CardOffset { get; } = new(0, 0);
 
     // Local properties.
